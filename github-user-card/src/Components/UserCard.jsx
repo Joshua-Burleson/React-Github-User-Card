@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import UserAnchor from './Styles/UserAnchor';
 
 class UserCard extends React.Component {
     constructor(props){
@@ -22,13 +23,13 @@ class UserCard extends React.Component {
 
     render(){
         return(
-            <div>
+            <UserAnchor href={this.state.user.html_url}>
                 <img src={this.state.user.avatar_url} />
                 <h3>{this.state.user.name || this.state.user.login}</h3>
                 <p>{this.state.user.location}</p>
                 {this.state.user.hireable && <p>Open to employment offers!</p>}
-                <span>Github URL: <a href={this.state.user.url}>{this.state.user.name ? this.state.user.login : this.state.user.url}</a></span>
-            </div>
+                <span>{`Github: ${this.state.user.name ? this.state.user.login : this.state.user.html_url}`}</span>
+            </UserAnchor>
         );
     }
 }

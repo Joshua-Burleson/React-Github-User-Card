@@ -1,22 +1,25 @@
 import React from 'react';
 import axios from 'axios';
 import UserCard from './UserCard';
+import Header from './Header';
+import RootCard from './Styles/RootCard';
+import FollowerSection from './Styles/FollowerSection';
 
 class RootUser extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             rootUser: {},
-            followers: []
+            followers: [],
+            searchError: {}
         };
     }
 
     retrieveAPIData(url, pseudoState){
-        pseudoState = pseudoState || {rootUser: false, followers: false};
+        pseudoState = pseudoState || {rootUser: false, followers: false, searchError: {}};
+        // Base case: rootUser and followers set
         if(pseudoState.rootUser && pseudoState.followers){
-            console.log('Base Case!', pseudoState)
-            this.setState(pseudoState);
-            return;
+            return this.setState(pseudoState);
         }
         axios.get(url)
             .then(res => {
@@ -41,11 +44,12 @@ class RootUser extends React.Component {
     render(){
         return(
             <div>
-                <h1>{this.state.searchError && this.state.searchError.message || this.props.rootUser}</h1>
-                <UserCard key={this.state.rootUser.id || 'top'} user={this.state.rootUser} />
-                {this.props.searchBar}
+                <Header searchBar={this.props.searchBar} searchError={this.state.searchError} rootUser={this.props.rootUser}/>
+                <RootCard><UserCard key={this.state.rootUser.id || 'top'} user={this.state.rootUser} /></RootCard>
                 <h2>Followers</h2>
+                <FollowerSection>
                 {this.state.followers && this.state.followers.map(follower => <UserCard singleSearch={this.props.singleSearch} key={follower.id} user={follower} callRequired={true}/>)}
+                </FollowerSection>
             </div>
         );
     }

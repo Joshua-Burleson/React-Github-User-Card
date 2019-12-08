@@ -19,9 +19,9 @@ class App extends React.Component {
   render(){
     return (
       <div className="App">
-        <header className="App-header">
+        <div className="App-header">
           <RootUser searchBar={<SearchBar setRoot={this.setRoot} />} rootUser={this.state.rootUser} fresh={true}/>
-        </header>
+        </div>
       </div>
     );
   }
