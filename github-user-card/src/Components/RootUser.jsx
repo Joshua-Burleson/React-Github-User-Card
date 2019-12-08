@@ -24,19 +24,28 @@ class RootUser extends React.Component {
                 pseudoState[!pseudoState.rootUser ? 'rootUser' : 'followers'] = res.data;
                 return this.retrieveAPIData(url.split('/').includes('followers') ? url : `${url}/followers`, pseudoState);
             })
-            .catch(err => console.log(err));
+            .catch(err => this.setState({...this.state, searchError: {error: err, message: `User ${this.props.rootUser} not found`}}));
     };
 
 
     componentDidMount(){
-        this.retrieveAPIData('https://api.github.com/users/Joshua-Burleson');
+        this.retrieveAPIData(`https://api.github.com/users/${this.props.rootUser}`);
     };
+
+    componentDidUpdate(prevProps){
+        if(prevProps.rootUser !== this.props.rootUser){
+            this.retrieveAPIData(`https://api.github.com/users/${this.props.rootUser}`);
+        }
+    }
 
     render(){
         return(
             <div>
+                <h1>{this.state.searchError && this.state.searchError.message || this.props.rootUser}</h1>
                 <UserCard key={this.state.rootUser.id || 'top'} user={this.state.rootUser} />
-                {this.state.followers && this.state.followers.map(follower => <UserCard key={follower.id} user={follower} callRequired={true}/>)}
+                {this.props.searchBar}
+                <h2>Followers</h2>
+                {this.state.followers && this.state.followers.map(follower => <UserCard singleSearch={this.props.singleSearch} key={follower.id} user={follower} callRequired={true}/>)}
             </div>
         );
     }
